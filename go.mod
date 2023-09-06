@@ -2,7 +2,7 @@ module github.com/cerc-io/eth-test-data
 
 go 1.19
 
-require github.com/ethereum/go-ethereum v1.12.0
+require github.com/ethereum/go-ethereum v1.11.6
 
 require (
 	github.com/DataDog/zstd v1.5.2 // indirect
