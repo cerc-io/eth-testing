@@ -16,7 +16,7 @@ func ChainDataPaths(chain string) (string, string) {
 		panic("could not get function source path")
 	}
 
-	chainPath := filepath.Join(filepath.Dir(thisPath), "..", "chain", chain)
+	chainPath := filepath.Join(filepath.Dir(thisPath), "..", "data", chain)
 
 	chaindataPath, err := filepath.Abs(chainPath)
 	if err != nil {
