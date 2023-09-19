@@ -1,7 +1,7 @@
 package small
 
 import (
-	"github.com/cerc-io/eth-test-data/fixture/util"
+	"github.com/cerc-io/eth-testing/chaindata/util"
 )
 
 var (

@@ -17,10 +17,12 @@ import (
 
 const LatestBlock uint = 3
 
+var blocks []*types.Block
+
 // LoadBlocks loads fixture blocks up to and including the passed height or the highest available block
-func LoadBlocks(upto uint) []*types.Block {
-	if upto > LatestBlock {
-		upto = LatestBlock
+func GetBlocks() []*types.Block {
+	if blocks != nil {
+		return blocks
 	}
 	db := rawdb.NewMemoryDatabase()
 	genesisBlock := core.DefaultGenesisBlock().MustCommit(db)
@@ -36,11 +38,11 @@ func LoadBlocks(upto uint) []*types.Block {
 		panic("mainnet genesis blocks do not match")
 	}
 
-	blocks := make([]*types.Block, upto+1)
+	blocks := make([]*types.Block, LatestBlock+1)
 	blocks[0] = new(types.Block)
 	rlp.DecodeBytes(block0RLP, blocks[0])
 
-	for i := uint(1); i <= upto; i++ {
+	for i := uint(1); i <= LatestBlock; i++ {
 		blockRLP, err := loadBlockRLP(fmt.Sprintf("./block%d_rlp", i))
 		if err != nil {
 			panic(err)
