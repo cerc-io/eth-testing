@@ -1,32 +1,55 @@
 package util
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"runtime"
 )
 
-// ChainDataPath returns the absolute paths to fixture chaindata for the given name.
-// Currently the only chains are:
-// - small: 32-block small-size chain
-// - medium: a short medium-sized chain
-func ChainDataPaths(chain string) (string, string) {
+type ChainData struct {
+	Path, AncientPath string
+}
+
+// List of names of chaindata fixtures accessible via ChainDataPaths
+var FixtureChains = []string{
+	"small", "small2",
+}
+
+func IsFixture(chain string) bool {
+	has := false
+	for _, fixture := range FixtureChains {
+		if chain == fixture {
+			has = true
+			break
+		}
+	}
+	return has
+}
+
+// GetChainData returns the absolute paths to fixture chaindata for the given name.
+func GetChainData(chain string) (*ChainData, error) {
+	// fail if chain not in FixtureChains
+	if !IsFixture(chain) {
+		return nil, errors.New("no fixture named " + chain)
+	}
+
 	_, thisPath, _, ok := runtime.Caller(0)
 	if !ok {
-		panic("could not get function source path")
+		return nil, errors.New("could not get function source path")
 	}
 
 	chainPath := filepath.Join(filepath.Dir(thisPath), "..", "data", chain)
 
 	chaindataPath, err := filepath.Abs(chainPath)
 	if err != nil {
-		panic("cannot resolve path " + chainPath)
+		return nil, errors.New("cannot resolve path " + chainPath)
 	}
 	ancientdataPath := filepath.Join(chaindataPath, "ancient")
 
 	if _, err := os.Stat(chaindataPath); err != nil {
-		panic("must populate chaindata at " + chaindataPath)
+		return nil, errors.New("must populate chaindata at " + chaindataPath)
 	}
 
-	return chaindataPath, ancientdataPath
+	return &ChainData{chaindataPath, ancientdataPath}, nil
 }

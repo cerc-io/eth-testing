@@ -5,5 +5,5 @@ import (
 )
 
 var (
-	ChainDataPath, AncientDataPath = util.ChainDataPaths("small")
+	ChainDataPath, AncientDataPath = util.GetChainData("small")
 )
