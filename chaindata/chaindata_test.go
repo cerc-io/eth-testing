@@ -28,7 +28,7 @@ func testReadChainData(t *testing.T, data *chaindata.Paths) {
 	}
 	header := rawdb.ReadHeader(edb, hash, *height)
 	if header == nil {
-		t.Fatalf("unable to read canonical header at height %d", height)
+		t.Fatalf("unable to read canonical header at height %d", *height)
 	}
 	sdb := state.NewDatabase(edb)
 	tree, err := sdb.OpenTrie(header.Root)
