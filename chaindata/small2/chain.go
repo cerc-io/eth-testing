@@ -1,9 +1,15 @@
 package small2
 
 import (
-	"github.com/cerc-io/eth-testing/chaindata/util"
+	"github.com/cerc-io/eth-testing/chaindata"
 )
 
 var (
-	ChainDataPath, AncientDataPath = util.GetChainData("small2")
+	ChainData, err = chaindata.GetFixture("small2")
 )
+
+func init() {
+	if err != nil {
+		panic(err)
+	}
+}
