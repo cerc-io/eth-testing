@@ -35,7 +35,10 @@ func testReadChainData(t *testing.T, data *chaindata.Paths) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	it := tree.NodeIterator(nil)
+	it, err := tree.NodeIterator(nil)
+	if err != nil {
+		t.Fatal(err)
+	}
 	for it.Next(true) {
 	}
 	if err := it.Error(); err != nil {
