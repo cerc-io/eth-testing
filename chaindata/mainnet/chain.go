@@ -13,6 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/rawdb"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/triedb"
 )
 
 const LatestBlock uint = 3
@@ -25,7 +26,7 @@ func GetBlocks() []*types.Block {
 		return blocks
 	}
 	db := rawdb.NewMemoryDatabase()
-	genesisBlock := core.DefaultGenesisBlock().MustCommit(db)
+	genesisBlock := core.DefaultGenesisBlock().MustCommit(db, triedb.NewDatabase(db, nil))
 	genRLP, err := rlp.EncodeToBytes(genesisBlock)
 	if err != nil {
 		log.Fatal(err)
