@@ -1,7 +1,7 @@
 package small2
 
 import (
-	"github.com/cerc-io/eth-testing/chaindata"
+	"github.com/cerc-io/eth-testing/chains"
 	"github.com/cerc-io/eth-testing/utils"
 )
 
