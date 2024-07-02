@@ -1,4 +1,4 @@
-package chaindata
+package chains
 
 import (
 	"errors"
@@ -14,7 +14,9 @@ type Paths struct {
 
 // List of names of chaindata fixtures accessible via ChainDataPaths
 var FixtureChains = []string{
-	"small", "small2",
+	"premerge1",
+	"premerge2",
+	"postmerge1",
 }
 
 func IsFixture(chain string) bool {
@@ -41,20 +43,26 @@ func GetFixture(chain string) (*Paths, error) {
 		return nil, errors.New("could not get function source path")
 	}
 
-	chaindataPath := filepath.Join(filepath.Dir(thisPath), "_data", chain)
+	chaindataPath := filepath.Join(filepath.Dir(thisPath), "data", chain, "geth", "chaindata")
 	if _, err := os.Stat(chaindataPath); err != nil {
 		return nil, errors.New("cannot access chaindata at " + chaindataPath)
 	}
 
 	// Copy chaindata directory to a temporary directory
 	// Note that we assume the ancient path is a subdirectory
-	copyTo := filepath.Join(os.TempDir(), chain)
+	// copyTo := filepath.Join(os.TempDir(), chain)
+	copyTo, err := os.MkdirTemp("", chain+"-chaindata-*")
+	if err != nil {
+		return nil, err
+	}
 	if err := copyDir(chaindataPath, copyTo); err != nil {
 		return nil, err
 	}
-	ancientCopy := filepath.Join(copyTo, "ancient")
 
-	return &Paths{copyTo, ancientCopy}, nil
+	return &Paths{
+		chaindataPath,
+		filepath.Join(chaindataPath, "ancient"),
+	}, nil
 }
 
 func copyDir(src, dest string) error {

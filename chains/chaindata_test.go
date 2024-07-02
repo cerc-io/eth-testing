@@ -1,4 +1,4 @@
-package chaindata_test
+package chains_test
 
 import (
 	"testing"
@@ -6,18 +6,18 @@ import (
 	"github.com/ethereum/go-ethereum/core/rawdb"
 	"github.com/ethereum/go-ethereum/core/state"
 
-	"github.com/cerc-io/eth-testing/chaindata"
+	"github.com/cerc-io/eth-testing/chains"
 )
 
-func testReadChainData(t *testing.T, data *chaindata.Paths) {
-	kvdb, ldberr := rawdb.NewLevelDBDatabase(data.ChainData, 1024, 256, t.Name(), true)
-	if ldberr != nil {
-		t.Fatal(ldberr)
-	}
-	edb, err := rawdb.NewDatabaseWithFreezer(kvdb, data.Ancient, t.Name(), true)
-	if err != nil {
-		t.Fatal(err)
-	}
+func testReadChainData(t *testing.T, data *chains.Paths) {
+	edb, err := rawdb.Open(rawdb.OpenOptions{
+		Directory:         data.ChainData,
+		AncientsDirectory: data.Ancient,
+		Namespace:         t.Name(),
+		Cache:             1024,
+		Handles:           256,
+		ReadOnly:          true,
+	})
 	defer edb.Close()
 
 	// Check that we can open and traverse a trie at the head block
@@ -47,9 +47,9 @@ func testReadChainData(t *testing.T, data *chaindata.Paths) {
 }
 
 func TestReadChainData(t *testing.T) {
-	for _, name := range []string{"permerge1", "premerge2", "postmerge1"} {
+	for _, name := range chains.FixtureChains {
 		t.Run(name, func(t *testing.T) {
-			data, err := chaindata.GetFixture(name)
+			data, err := chains.GetFixture(name)
 			if err != nil {
 				t.Fatal(err)
 			}
