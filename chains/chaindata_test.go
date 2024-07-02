@@ -47,7 +47,7 @@ func testReadChainData(t *testing.T, data *chaindata.Paths) {
 }
 
 func TestReadChainData(t *testing.T) {
-	for _, name := range []string{"small", "small2"} {
+	for _, name := range []string{"permerge1", "premerge2"} {
 		t.Run(name, func(t *testing.T) {
 			data, err := chaindata.GetFixture(name)
 			if err != nil {
