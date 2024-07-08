@@ -9,7 +9,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/ethereum/go-ethereum/triedb"
 
-	"github.com/cerc-io/eth-testing/chaindata/mainnet"
+	"github.com/cerc-io/eth-testing/chains/mainnet"
 )
 
 func TestLoadChain(t *testing.T) {

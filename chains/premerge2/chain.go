@@ -1,12 +1,12 @@
-package small2
+package premerge2
 
 import (
-	"github.com/cerc-io/eth-testing/chaindata"
+	"github.com/cerc-io/eth-testing/chains"
 	"github.com/cerc-io/eth-testing/utils"
 )
 
 var (
-	ChainData, err = chaindata.GetFixture("small2")
+	ChainData, err = chains.GetFixture("premerge2")
 
 	// keybytes-encoded leaf keys of all state nodes
 	Block1_StateNodeLeafKeys [][]byte

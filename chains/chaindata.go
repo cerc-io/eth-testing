@@ -1,4 +1,4 @@
-package chaindata
+package chains
 
 import (
 	"errors"
@@ -14,7 +14,9 @@ type Paths struct {
 
 // List of names of chaindata fixtures accessible via ChainDataPaths
 var FixtureChains = []string{
-	"small", "small2",
+	"premerge1",
+	"premerge2",
+	"postmerge1",
 }
 
 func IsFixture(chain string) bool {
@@ -30,7 +32,7 @@ func IsFixture(chain string) bool {
 
 // GetFixture returns the paths to the fixture chaindata for the given name.  This copies the
 // fixture data and returns paths to temp directories, due to the fact that Go modules are installed
-// read-only and Leveldb will attempt to create lock files when opening a DB.
+// read-only and Leveldb/Pebble will attempt to create lock files when opening a DB.
 func GetFixture(chain string) (*Paths, error) {
 	if !IsFixture(chain) {
 		return nil, errors.New("no fixture named " + chain)
@@ -41,20 +43,25 @@ func GetFixture(chain string) (*Paths, error) {
 		return nil, errors.New("could not get function source path")
 	}
 
-	chaindataPath := filepath.Join(filepath.Dir(thisPath), "_data", chain)
+	chaindataPath := filepath.Join(filepath.Dir(thisPath), "data", chain, "geth", "chaindata")
 	if _, err := os.Stat(chaindataPath); err != nil {
 		return nil, errors.New("cannot access chaindata at " + chaindataPath)
 	}
 
 	// Copy chaindata directory to a temporary directory
 	// Note that we assume the ancient path is a subdirectory
-	copyTo := filepath.Join(os.TempDir(), chain)
+	copyTo, err := os.MkdirTemp("", chain+"-chaindata-*")
+	if err != nil {
+		return nil, err
+	}
 	if err := copyDir(chaindataPath, copyTo); err != nil {
 		return nil, err
 	}
-	ancientCopy := filepath.Join(copyTo, "ancient")
 
-	return &Paths{copyTo, ancientCopy}, nil
+	return &Paths{
+		copyTo,
+		filepath.Join(copyTo, "ancient"),
+	}, nil
 }
 
 func copyDir(src, dest string) error {
@@ -63,22 +70,16 @@ func copyDir(src, dest string) error {
 		return err
 	}
 
-	srcDir, err := os.Open(src)
-	if err != nil {
-		return err
-	}
-	defer srcDir.Close()
-
-	fileInfos, err := srcDir.Readdir(-1)
+	entries, err := os.ReadDir(src)
 	if err != nil {
 		return err
 	}
 
-	for _, fileInfo := range fileInfos {
-		srcPath := filepath.Join(src, fileInfo.Name())
-		destPath := filepath.Join(dest, fileInfo.Name())
+	for _, entry := range entries {
+		srcPath := filepath.Join(src, entry.Name())
+		destPath := filepath.Join(dest, entry.Name())
 
-		if fileInfo.IsDir() {
+		if entry.IsDir() {
 			if err := copyDir(srcPath, destPath); err != nil {
 				return err
 			}
@@ -105,8 +106,5 @@ func copyFile(src, dest string) error {
 	defer destFile.Close()
 
 	_, err = io.Copy(destFile, srcFile)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
