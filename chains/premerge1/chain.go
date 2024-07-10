@@ -1,3 +1,4 @@
+// premerge1 is from a Clique-based pre-Merge chain with a single genesis allocation.
 package premerge1
 
 import (

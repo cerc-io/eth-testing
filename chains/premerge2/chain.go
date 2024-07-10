@@ -1,3 +1,4 @@
+// premerge2 is from an Ethash-based pre-Merge chain.
 package premerge2
 
 import (

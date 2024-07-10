@@ -1,0 +1,15 @@
+{
+  "chainId": 1212,
+  "homesteadBlock": 1,
+  "eip150Block": 1,
+  "eip155Block": 1,
+  "eip158Block": 1,
+  "byzantiumBlock": 1,
+  "constantinopleBlock": 1,
+  "petersburgBlock": 1,
+  "istanbulBlock": 1,
+  "berlinBlock": 1,
+  "londonBlock": 1,
+  "mergeNetsplitBlock": 1,
+  "terminalTotalDifficulty": 1000
+}
