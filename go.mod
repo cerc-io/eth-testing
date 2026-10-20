@@ -1,8 +1,6 @@
 module github.com/cerc-io/eth-testing
 
-go 1.21
-
-toolchain go1.22.3
+go 1.24
 
 require github.com/ethereum/go-ethereum v1.13.14
 
@@ -37,7 +35,7 @@ require (
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/holiman/bloomfilter/v2 v2.0.3 // indirect
 	github.com/holiman/uint256 v1.2.4 // indirect
-	github.com/klauspost/compress v1.15.15 // indirect
+	github.com/klauspost/compress v1.18.7 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
